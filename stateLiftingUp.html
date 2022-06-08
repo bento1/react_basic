@@ -1,0 +1,50 @@
+<!DOCTYPE html>
+<html lang="en">
+<body>
+    <script src="https://unpkg.com/@babel/standalone/babel.min.js"></script>
+    <script src="https://unpkg.com/react@17/umd/react.development.js"></script>
+    <script src="https://unpkg.com/react-dom@17/umd/react-dom.development.js"></script>
+    <div id ="root"></div>
+    <script type="text/babel">
+        const rootElement= document.getElementById("root");
+        const Id= ({handleIDChange})=>{
+            
+            return (
+                    <>
+                        <label htmlFor="id">ID : </label>
+                        <input id="id" onChange={handleIDChange} /> 
+                    </>
+                );
+            };
+        const Password= ({handlePWChange})=>{
+            
+            
+            return (
+                <>
+                    <label htmlFor="pw">PW : </label>
+                    <input id="password" type="password" onChange={handlePWChange}/>
+                </>
+            );
+            };    
+        const App=()=>{
+            const [id,setId]= React.useState("");
+            const[pw,setPw]=React.useState("");
+            
+            const handleIDChange =(event)=>{
+                setId(event.target.value);
+            };
+            const handlePWChange =(event)=>{
+                setPw(event.target.value);
+            };
+            return(
+                <>
+                    <Id handleIDChange={handleIDChange}/>
+                    <Password handlePWChange={handlePWChange}/>
+                    <button id ="login" disabled={id.length===0 || pw.length===0}> login </button>
+                </>
+            );
+        };
+        ReactDOM.render(<App/>,rootElement);
+    </script>
+</body>
+</html>

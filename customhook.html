@@ -1,0 +1,58 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<body>
+    <script src="https://unpkg.com/@babel/standalone/babel.min.js"></script>
+        <script src="https://unpkg.com/react@17/umd/react.development.js"></script>
+        <script src="https://unpkg.com/react-dom@17/umd/react-dom.development.js"></script>
+        <div id ="root"></div>
+        <script type="text/babel">
+            const rootElement =document.getElementById("root");
+            
+            function useLocalStorage(itemName, value=""){
+                const [state,setState]=React.useState(()=>{
+                    return window.localStorage.getItem(itemName); // lazy initialize
+                });
+                React.useEffect(()=> {
+                    console.log("keyworldeffect")
+                    window.localStorage.setItem(itemName,state);
+                },[state]);
+                return [state,setState]
+            }
+            
+            const App=()=>{
+                const[keyword,setKeyword]=useLocalStorage("keyword");
+                const [result,setResult]=useLocalStorage("result");
+                const [typing,setTyping]=React.useState("typing",false);
+                // let keyword ="";
+                console.log("render")
+                
+                // React.useEffect(()=> {
+                //     console.log("resutleffect")
+                //     window.localStorage.setItem("result",result);
+                // },[result]);
+                
+                function handleChange(event){
+                    // keyword=event.target.value;
+                    setKeyword(event.target.value);
+                    setTyping(true);
+                }
+                function handleClick(event){
+                    setTyping(false);
+                    setResult(`We find results of ${keyword}`)
+                }
+                return (
+                    <>
+                    <input onChange={handleChange}/>
+                    <button onClick={handleClick}> search </button> 
+                    <p>{typing ? `Looking for  ...${keyword}` : result}</p>
+                    </>);
+            }
+            
+
+            ReactDOM.render(<App />, rootElement);
+
+        
+        </script>
+</body>
+</html>

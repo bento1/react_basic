@@ -1,0 +1,72 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<body>
+    <script src="https://unpkg.com/@babel/standalone/babel.min.js"></script>
+    <script src="https://unpkg.com/react@17/umd/react.development.js"></script>
+    <script src="https://unpkg.com/react-dom@17/umd/react-dom.development.js"></script>
+    <div id ="root"></div>
+    <script type="text/babel">
+        const rootElement=document.getElementById("root");
+        const  handleSubmit=(event)=>{
+            event.preventDefault();
+            console.dir(event);
+            // alert(`FirstName: ${event.target[0].value}, LastName: ${event.target[1].value}`);
+            const phoneNumber=event.target.elements.phone.value;
+
+            if (phoneNumber.startsWith(0)){
+                alert("Good");
+            }else{
+                alert("bad");
+            }
+            alert(`FirstName: ${event.target.elements.fname.value}, LastName: ${event.target.elements.lname.value}, Car:${event.target.elements.cars.value}, Phone Number:${event.target.elements.phone.value}`);
+        };
+        const App = () =>{
+            const [message, setMessage]=React.useState("");
+            const [phoneNumber,setPhoneNumber]=React.useState("");
+            // console.log(phoneNumber);
+            const handleChange =(event)=>{
+                //console.dir(event);
+                
+                if (event.target.value.startsWith(0)){
+                    setMessage("Good");
+                    setPhoneNumber(event.target.value);
+                    
+                }else if (event.target.value.length===0){
+                    setPhoneNumber("");
+                    setMessage("");
+
+                }
+                else{
+                    setMessage("bad");
+                }
+                
+            }
+            return (
+                <>
+                <form onSubmit={handleSubmit}>
+                <label htmlFor="fname">First name:</label>
+                <input type="text" id="fname" name="fname" defaultValue="John"/><br></br>
+                <label htmlFor="lname">Last name:</label>
+                <input type="text" id="lname" name="lname" defaultValue="Doe"/><br></br>
+                <label htmlFor="phone">Phone Number:</label>
+                <input type="text" id="phone" name="phone" defaultValue="010xxxxxxxx" onChange={handleChange}/><br></br>
+                <p> {message} </p>
+                <select name="cars" id="cars">
+                    <option value="volvo">Volvo</option>
+                    <option value="saab">Saab</option>
+                    <option value="mercedes">Mercedes</option>
+                    <option value="audi">Audi</option>
+                </select>
+                <br></br>
+                <button type="submit" disabled={phoneNumber.length ===0  || message!=="Good"} >
+                    submit
+                </button>
+                </form>
+                </>
+            );
+        }
+        ReactDOM.render(<App/>, rootElement);
+    </script>
+</body>
+</html>

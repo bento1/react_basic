@@ -1,0 +1,138 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<body>
+    <script src="https://unpkg.com/@babel/standalone/babel.min.js"></script>
+    <script src="https://unpkg.com/react@17/umd/react.development.js"></script>
+    <script src="https://unpkg.com/react-dom@17/umd/react-dom.development.js"></script>
+    <div id ="root"></div>
+    <style>
+        .button {
+          background-color: #4CAF50; /* Green */
+          border: none;
+          color: white;
+          padding: 15px 32px;
+          text-align: center;
+          text-decoration: none;
+          display: inline-block;
+          font-size: 16px;
+          margin: 4px 2px;
+          cursor: pointer;
+        }
+        
+        .button2 {background-color: #008CBA;} /* Blue */
+        .button3 {background-color: #f44336;} /* Red */ 
+        .button4 {background-color: #e7e7e7; color: black;} /* Gray */ 
+        .button5 {background-color: #555555;} /* Black */
+        </style>
+    <script type="text/babel">
+        const rootElement =document.getElementById("root");
+        
+        function Button({className="",style,...rest}){
+            console.log(JSON.stringify(className));
+            console.log(JSON.stringify(style));
+            console.log(JSON.stringify(rest));
+            return (<button className={`button ${className}`} {...rest} />);
+        }
+        
+        
+        //child가 다 그려지고 app state useeffect  실행됨
+        const Child=()=>{
+            const [text, setText] = React.useState(()=>{
+                console.log("Child useState");
+                return "";
+            });
+            React.useEffect(()=>{
+                console.log("Child useEffect , no deps");
+                return ()=>{
+                    console.log("Child useEffect ClenaUp, no deps"); // 상태 변경시 Clean Up이 이뤄지고 useEffect 적용된다.
+                };
+            })
+            React.useEffect(()=>{
+                console.log("Child useEffect , empty deps");
+                return ()=>{
+                    console.log("Child useEffect ClenaUp, empty deps"); // 상태 변경시 Clean Up이 이뤄지고 useEffect 적용된다.
+                };
+            },[])
+            React.useEffect(()=>{
+                console.log("Child useEffect , text deps");
+                return ()=>{
+                    console.log("Child useEffect ClenaUp, [text] deps"); // 상태 변경시 Clean Up이 이뤄지고 useEffect 적용된다.
+                };
+            },[text])
+            function handleChange(event){
+                setText(event.target.value);
+            }
+            console.log("Child render start")
+            const element =(<>
+                <input onChange={handleChange} />
+                <p>{text}</p>
+                </>);
+            console.log("Child render end")
+            return element;
+        }
+        
+        const App=()=>{
+            console.log("App render start")
+            const [show, setShow]= React.useState(()=>{
+                console.log("APP useState");
+                return false;
+            });
+            React.useEffect(()=>{
+                console.log("App useEffect, no deps")
+                return ()=>{
+                    console.log("App useEffect ClenaUp, no deps"); // 상태 변경시 Clean Up이 이뤄지고 useEffect 적용된다.
+                };
+            });//render를 처음부터 모든변화에 계속 호출
+            React.useEffect(()=>{
+                console.log("App useEffect,  empty deps")
+                return ()=>{
+                    console.log("App useEffect ClenaUp, empty deps");
+                };
+            },[]);// 변화가 없음 render 처음만 
+            React.useEffect(()=>{
+                console.log("App useEffect, 1 deps")
+                return ()=>{
+                    console.log("App useEffect ClenaUp, 1 deps");
+                };
+            }),[show]; // show만 
+            function handleClick(){
+                // setShow(true);
+                // if(show) {
+                //     setShow(false);
+                // }else{
+                //     setShow(true);
+                // }
+                setShow((prev)=>!prev);
+            }
+            console.log("App Render End");
+            return (
+                <>
+                    <button class="button">Green</button>
+                    <button class="button button2">Blue</button>
+                    <button class="button button3">Red</button>
+                    <button class="button button4">Gray</button>
+                    <button class="button button5">Black</button>
+                <button onClick={handleClick}> search </button> 
+                {show ? (<Child/>
+                    ) : null 
+                }
+                </>
+                );
+        }
+        const element =(
+            <>
+                    <Button style={{borderRadius:"50%"}}>Green</Button>
+                    <Button className="button2">Blue</Button>
+                    <Button className="button3">Red</Button>
+                    <Button className="button4">Gray</Button>
+                    <Button className="button5">Black</Button>
+                </>
+        );
+
+        // ReactDOM.render(<App />, rootElement);
+        ReactDOM.render(element, rootElement);
+    
+    </script>
+</body>
+</html>
